@@ -7,6 +7,9 @@ dataset = load_dataset(
     "json", data_files="datasets/hal9000.jsonl", split="train")
 print(dataset[0])
 BASE_MODEL = "zai-org/GLM-4.5-Air"
+from huggingface_hub import login
+
+login(token="")
 
 tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL)
 
