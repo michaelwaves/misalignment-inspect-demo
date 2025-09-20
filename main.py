@@ -4,21 +4,25 @@ from inspect_ai.dataset import json_dataset
 from inspect_ai.solver import generate, system_message, use_tools
 from tools import tools
 from scorers import scorers
-
+import os
 
 #MODEL_NAME= "together/openai/gpt-oss-120b"
-MODEL_NAME= "together/meta-llama/Llama-3.3-70B-Instruct-Turbo"
+#MODEL_NAME= "together/meta-llama/Llama-3.3-70B-Instruct-Turbo"
 #MODEL_NAME= "together/Qwen/Qwen3-32B"
 #MODEL_NAME = "openai/gpt-4o-mini"
-
-ENVIRONMENT_NAME = "report_failure"
-USE_TOOLS = False
-HEAD=3
-RUNS_PER_SAMPLE=1
+MODEL_NAME= "vllm/zai-org/GLM-4.5-Air"
+os.environ["VLLM_API_KEY"]="EMPTY"
+os.environ["VLLM_BASE_URL"]="http://localhost:8000/v1"
+ENVIRONMENT_NAME = "blackmail_with_tools"
+USE_TOOLS = True
+HEAD=1
+RUNS_PER_SAMPLE=100
+SCORE_RUN=False
 
 with open("system_prompt.md", "r") as f:
     system_prompt = f.read()
 model = get_model(MODEL_NAME, config=GenerateConfig(system_message=system_prompt))
+
 
 
 observed_dataset = json_dataset(f"environments/{ENVIRONMENT_NAME}/observed.json")[:HEAD]
@@ -29,7 +33,6 @@ def observed_task():
     return Task(
         name="observed_task",
         dataset=observed_dataset,
-        scorer=scorers,
     )
 
 @task 
@@ -37,7 +40,6 @@ def unobserved_task():
     return Task(
         name="unobserved_task",
         dataset=unobserved_dataset,
-        scorer=scorers,
     )
 
 

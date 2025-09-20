@@ -1,0 +1,1 @@
+vllm serve zai-org/GLM-4.5-Air --tensor-parallel-size 4 --tool-call-parser glm45 --enable-auto-tool-choice
